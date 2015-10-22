@@ -1,6 +1,6 @@
 {
   "name": "generator-bem-module",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "small bemcloud module generator",
   "license": "MIT",
   "main": "app/index.js",
