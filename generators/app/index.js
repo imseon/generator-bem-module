@@ -4,7 +4,7 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 
 module.exports = yeoman.generators.Base.extend({
-  prompting: function () {
+  prompting: function() {
     var done = this.async();
 
     // Have Yeoman greet the user.
@@ -13,13 +13,13 @@ module.exports = yeoman.generators.Base.extend({
     ));
 
     var prompts = [{
-      type: 'confirm',
-      name: 'someOption',
-      message: 'Would you like to enable this option?',
-      default: true
+      type: 'input',
+      name: 'name',
+      message: 'Please enter the module name: ',
+      default: this.appname
     }];
 
-    this.prompt(prompts, function (props) {
+    this.prompt(prompts, function(props) {
       this.props = props;
       // To access props later use this.props.someOption;
 
@@ -28,22 +28,16 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    app: function () {
-      this.fs.copy(
+    app: function() {
+      this.fs.copyTpl(
         this.templatePath('_package.json'),
-        this.destinationPath('package.json')
-      );
-      this.fs.copy(
-        this.templatePath('_bower.json'),
-        this.destinationPath('bower.json')
+        this.destinationPath('package.json'), {
+          name: this.props.name
+        }
       );
     },
 
-    projectfiles: function () {
-      this.fs.copy(
-        this.templatePath('editorconfig'),
-        this.destinationPath('.editorconfig')
-      );
+    projectfiles: function() {
       this.fs.copy(
         this.templatePath('jshintrc'),
         this.destinationPath('.jshintrc')
@@ -51,7 +45,9 @@ module.exports = yeoman.generators.Base.extend({
     }
   },
 
-  install: function () {
-    this.installDependencies();
+  install: function() {
+    this.installDependencies({
+      bower: false
+    });
   }
 });
