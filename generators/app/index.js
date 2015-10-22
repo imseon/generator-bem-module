@@ -2,6 +2,7 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
+var capitalize = require('capitalize');
 
 module.exports = yeoman.generators.Base.extend({
   prompting: function() {
@@ -35,12 +36,28 @@ module.exports = yeoman.generators.Base.extend({
           name: this.props.name
         }
       );
+      this.fs.copyTpl(
+        this.templatePath('index.js'),
+        this.destinationPath('index.js'), {
+          name: capitalize.words(this.props.name).replace(/\-/g, '')
+        }
+      );
+      this.fs.copyTpl(
+        this.templatePath('test.js'),
+        this.destinationPath('test.js'), {
+          name: capitalize.words(this.props.name).replace(/\-/g, '')
+        }
+      );
     },
 
     projectfiles: function() {
       this.fs.copy(
         this.templatePath('jshintrc'),
         this.destinationPath('.jshintrc')
+      );
+      this.fs.copy(
+        this.templatePath('gitignore'),
+        this.destinationPath('.gitignore')
       );
     }
   },
